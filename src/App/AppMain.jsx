@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useRef, useState} from "react";
-import {generateAlerts, generateMetrics, MACHINES, POLL_MS, verifyJWT} from "../constants";
+import {generateAlerts, generateMetrics, MACHINES, POLL_MS} from "../constants";
 import {Login} from "../login/Login";
 import {Overview} from "../overview/Overview";
 import {Machines} from "../machines/Machines";
@@ -10,6 +10,8 @@ import {Admin} from "../admin/Admin";
 import {Topbar} from "../layout/Topbar";
 import {Sidebar} from "../layout/Sidebar";
 import {NotifPanel} from "./NotifPanel";
+import {AppUtilityMonitor} from "./AppUtilityMonitor";
+import {verifyJWT} from "../constants/Helpers";
 
 export function AppMain() {
     // ─── Auth state ──────────────────────────────────────────────────────────
@@ -63,7 +65,6 @@ export function AppMain() {
     if (!user) {
         return <><style></style><Login onLogin={handleLogin}/></>;
     }
-
     // ─── Role guard on view ───────────────────────────────────────────────────
     const ROLE_VIEWS = {
         plant:   ["overview","machines","maintenance"],
@@ -95,7 +96,7 @@ export function AppMain() {
           text-transform: uppercase; font-family: var(--mono);
         }
       `}</style>
-
+            {user ? <AppUtilityMonitor/> : null}
             <div className="app-wrap">
                 <Sidebar
                     user={user}
@@ -123,6 +124,7 @@ export function AppMain() {
             {showNotif && (
                 <NotifPanel alerts={alerts} onAck={ackAlert} onClose={() => setShowNotif(false)}/>
             )}
+
         </>
     );
 }

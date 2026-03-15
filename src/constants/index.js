@@ -21,19 +21,6 @@ export const MACHINES = [
 export const PLANTS   = ["Plant A", "Plant B", "Plant C"];
 export const PRODUCTS = ["Insulin API", "Vaccine Buffer", "Plasma Fraction", "mRNA Lipid NP", "Enzyme Purification", "Monoclonal Ab"];
 
-// ─── JWT helpers (browser-safe simulation) ───────────────────────────────
-
-export const signJWT = (user) => {
-    const payload = { id: user.id, role: user.role, name: user.name, plant: user.plant, email: user.email, avatar: user.avatar, dept: user.dept, exp: Date.now() + 3_600_000 };
-    return `eyJhbGciOiJIUzI1NiJ9.${btoa(JSON.stringify(payload))}.SIG_${user.id}_${Date.now()}`;
-};
-export const parseJWT = (token) => {
-    try { return JSON.parse(atob(token.split(".")[1])); } catch { return null; }
-};
-export const verifyJWT = (token) => {
-    const p = parseJWT(token);
-    return p && p.exp > Date.now() ? p : null;
-};
 
 // ─── Metric generators ───────────────────────────────────────────────────
 
@@ -147,4 +134,17 @@ export const KPIS = [
 
 export const POLL_MS = 2800;
 
+export const TANK_MAX_L = 20000;
+export const TANK_MIN_PCT = 25;
+export const TANK_MAX_PCT = 90;
+export const FLOW_ALERT_PCT = 3;      // % difference triggers email
+export const TEMP_ALERT_DEG = 5;      // °C difference triggers email
+export const CHANNELS = ["A", "B", "C", "D"];
+export const EMAIL_COOLDOWN_MS = 30000;
+export const CHANNEL_COLORS = {
+    A: "#00e5ff",
+    B: "#00ff9d",
+    C: "#ff6b35",
+    D: "#c77dff",
+};
 

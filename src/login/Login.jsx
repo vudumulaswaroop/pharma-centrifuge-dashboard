@@ -1,5 +1,6 @@
 import {useState} from "react";
-import {signJWT, USERS} from "../constants";
+import { USERS} from "../constants";
+import {signJWT} from "../constants/Helpers";
 
 export function Login({ onLogin }) {
     const [email, setEmail]     = useState("");
