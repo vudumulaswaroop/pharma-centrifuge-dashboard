@@ -2,6 +2,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Live Demo
+[Click here to view the project](https://pharma-centrifuge-dashboard-mukaytfbg-vudumulaswaroops-projects.vercel.app/)
+
+
 🚀 What’s Included
 
 🔐 Authentication System (JWT-Simulated)
