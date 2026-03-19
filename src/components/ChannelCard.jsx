@@ -2,7 +2,7 @@ import {CHANNEL_COLORS, FLOW_ALERT_PCT, TEMP_ALERT_DEG} from "../constants";
 import {fmt1, fmt2} from "../constants/Helpers";
 
 export function ChannelCard({ ch, label }) {
-    const { outlet, inflow, flowDiffPct, tempDiff, flowAlert, tempAlert } = ch;
+    const { outlet, inflow, flowDiffPct, tempDiff } = ch;
     const color = CHANNEL_COLORS[label];
     const flowWarn = Math.abs(flowDiffPct) > FLOW_ALERT_PCT;
     const tempWarn = Math.abs(tempDiff) > TEMP_ALERT_DEG;
