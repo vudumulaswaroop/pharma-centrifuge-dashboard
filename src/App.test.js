@@ -7,6 +7,7 @@ import { AppMain } from './App/AppMain';
 import { Topbar } from './layout/Topbar';
 import { Sidebar } from './layout/Sidebar';
 import { NotifPanel } from './App/NotifPanel';
+import { Login } from './login/Login';
 import { AlertFeed } from './components/AlertFeed';
 import { ChannelCard } from './components/ChannelCard';
 import { Clock } from './components/Clock';
@@ -32,6 +33,7 @@ import { LiveTag } from './ui/LiveTag';
 import { MultiLineChart } from './ui/MultiLineChart';
 import { Panel } from './ui/Panel';
 import { ProgressRow } from './ui/ProgressRow';
+import { SDot } from './ui/SDot';
 import { Sparkline } from './ui/SparkLine';
 import { StatCard } from './ui/StatCard';
 import { Tag } from './ui/Tag';
@@ -78,6 +80,38 @@ test('generateMetrics and generateAlerts produce expected shapes', () => {
   const alerts = generateAlerts();
   expect(alerts).toHaveLength(7);
   expect(alerts.filter(a => !a.ack)).toHaveLength(5);
+});
+
+test('Login: credential validation and callback on successful signin', async () => {
+  const onLogin = jest.fn();
+  render(<Login onLogin={onLogin} />);
+
+  const authButton = screen.getByRole('button', { name: /AUTHENTICATE/i });
+  userEvent.click(authButton);
+  expect(await screen.findByText(/Please enter credentials\./i)).toBeInTheDocument();
+
+  userEvent.type(screen.getByPlaceholderText(/user@pharma.com/i), 'wrong@pharma.com');
+  userEvent.type(screen.getByPlaceholderText(/••••••••/i), 'wrongpass');
+  userEvent.click(authButton);
+
+  jest.advanceTimersByTime(600);
+  await waitFor(() => expect(screen.getByText(/Invalid email or password\./i)).toBeInTheDocument());
+
+  userEvent.click(screen.getByText(/PLANT/i));
+  expect(screen.getByDisplayValue(/plant@pharma\.com/i)).toBeInTheDocument();
+  expect(screen.getByDisplayValue(/plant123/i)).toBeInTheDocument();
+
+  userEvent.click(authButton);
+  jest.advanceTimersByTime(600);
+  await waitFor(() => expect(onLogin).toHaveBeenCalled());
+});
+
+test('SDot: renders status class for warning and fallback colors', () => {
+  const warningDot = render(<SDot status="warning" />);
+  expect(warningDot.container.querySelector('.sdot.r')).toBeInTheDocument();
+
+  const noneDot = render(<SDot status="unknown" />);
+  expect(noneDot.container.querySelector('.sdot.n')).toBeInTheDocument();
 });
 
 test('AppMain: invalid token redirects to login and clears storage', async () => {
